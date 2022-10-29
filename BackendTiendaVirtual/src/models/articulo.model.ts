@@ -1,8 +1,8 @@
-import {Entity, model, property, belongsTo} from '@loopback/repository';
+import {Entity, model, property, hasOne} from '@loopback/repository';
 import {Pedido} from './pedido.model';
 
 @model()
-export class Producto extends Entity {
+export class Articulo extends Entity {
   @property({
     type: 'string',
     id: true,
@@ -34,16 +34,21 @@ export class Producto extends Entity {
   })
   precio: number;
 
-  @belongsTo(() => Pedido)
-  pedidoId: string;
+  @property({
+    type: 'string',
+  })
+  imagen?: string;
 
-  constructor(data?: Partial<Producto>) {
+  @hasOne(() => Pedido)
+  pedido: Pedido;
+
+  constructor(data?: Partial<Articulo>) {
     super(data);
   }
 }
 
-export interface ProductoRelations {
+export interface ArticuloRelations {
   // describe navigational properties here
 }
 
-export type ProductoWithRelations = Producto & ProductoRelations;
+export type ArticuloWithRelations = Articulo & ArticuloRelations;
