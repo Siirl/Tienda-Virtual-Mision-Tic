@@ -1,9 +1,9 @@
 import {inject, Getter} from '@loopback/core';
-import {DefaultCrudRepository, repository, BelongsToAccessor, HasManyRepositoryFactory} from '@loopback/repository';
+import {DefaultCrudRepository, repository, BelongsToAccessor} from '@loopback/repository';
 import {MongodbDataSource} from '../datasources';
-import {Pedido, PedidoRelations, Cliente, Producto} from '../models';
-import {ClienteRepository} from './cliente.repository';
-import {ProductoRepository} from './producto.repository';
+import {Pedido, PedidoRelations, Articulo, Persona} from '../models';
+import {ArticuloRepository} from './articulo.repository';
+import {PersonaRepository} from './persona.repository';
 
 export class PedidoRepository extends DefaultCrudRepository<
   Pedido,
@@ -11,17 +11,17 @@ export class PedidoRepository extends DefaultCrudRepository<
   PedidoRelations
 > {
 
-  public readonly cliente: BelongsToAccessor<Cliente, typeof Pedido.prototype.id>;
+  public readonly articulo: BelongsToAccessor<Articulo, typeof Pedido.prototype.id>;
 
-  public readonly productos: HasManyRepositoryFactory<Producto, typeof Pedido.prototype.id>;
+  public readonly persona: BelongsToAccessor<Persona, typeof Pedido.prototype.id>;
 
   constructor(
-    @inject('datasources.mongodb') dataSource: MongodbDataSource, @repository.getter('ClienteRepository') protected clienteRepositoryGetter: Getter<ClienteRepository>, @repository.getter('ProductoRepository') protected productoRepositoryGetter: Getter<ProductoRepository>,
+    @inject('datasources.mongodb') dataSource: MongodbDataSource, @repository.getter('ArticuloRepository') protected articuloRepositoryGetter: Getter<ArticuloRepository>, @repository.getter('PersonaRepository') protected personaRepositoryGetter: Getter<PersonaRepository>,
   ) {
     super(Pedido, dataSource);
-    this.productos = this.createHasManyRepositoryFactoryFor('productos', productoRepositoryGetter,);
-    this.registerInclusionResolver('productos', this.productos.inclusionResolver);
-    this.cliente = this.createBelongsToAccessorFor('cliente', clienteRepositoryGetter,);
-    this.registerInclusionResolver('cliente', this.cliente.inclusionResolver);
+    this.persona = this.createBelongsToAccessorFor('persona', personaRepositoryGetter,);
+    this.registerInclusionResolver('persona', this.persona.inclusionResolver);
+    this.articulo = this.createBelongsToAccessorFor('articulo', articuloRepositoryGetter,);
+    this.registerInclusionResolver('articulo', this.articulo.inclusionResolver);
   }
 }

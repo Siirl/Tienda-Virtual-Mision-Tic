@@ -8,31 +8,31 @@ import {
 } from '@loopback/rest';
 import {
   Pedido,
-  Cliente,
+  Persona,
 } from '../models';
 import {PedidoRepository} from '../repositories';
 
-export class PedidoClienteController {
+export class PedidoPersonaController {
   constructor(
     @repository(PedidoRepository)
     public pedidoRepository: PedidoRepository,
   ) { }
 
-  @get('/pedidos/{id}/cliente', {
+  @get('/pedidos/{id}/persona', {
     responses: {
       '200': {
-        description: 'Cliente belonging to Pedido',
+        description: 'Persona belonging to Pedido',
         content: {
           'application/json': {
-            schema: {type: 'array', items: getModelSchemaRef(Cliente)},
+            schema: {type: 'array', items: getModelSchemaRef(Persona)},
           },
         },
       },
     },
   })
-  async getCliente(
+  async getPersona(
     @param.path.string('id') id: typeof Pedido.prototype.id,
-  ): Promise<Cliente> {
-    return this.pedidoRepository.cliente(id);
+  ): Promise<Persona> {
+    return this.pedidoRepository.persona(id);
   }
 }

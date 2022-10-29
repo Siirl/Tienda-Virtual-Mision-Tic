@@ -1,3 +1,3 @@
-export * from './cliente.repository';
+export * from './articulo.repository';
 export * from './pedido.repository';
-export * from './producto.repository';
+export * from './persona.repository';
