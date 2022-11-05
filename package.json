@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@types/node-fetch": "^2.6.2",
+    "crypto-js": "^4.1.1",
+    "node-fetch": "2.6",
+    "password-generator": "^2.3.2"
+  }
+}
