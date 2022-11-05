@@ -1,36 +1,30 @@
-import { service } from '@loopback/core';
+import {service} from '@loopback/core';
 import {
   Count,
   CountSchema,
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
-  put,
-  del,
-  requestBody,
-  response,
+  del, get,
+  getModelSchemaRef, param, patch, post, put, requestBody,
+  response
 } from '@loopback/rest';
 import {Persona} from '../models';
 import {PersonaRepository} from '../repositories';
-import { AutenticacionService } from '../services';
-const fetch = require ('node-fetch');
+import {AutenticacionService} from '../services';
+const fetch = require('node-fetch');
 
 
 export class PersonaController {
   constructor(
     @repository(PersonaRepository)
-    public personaRepository : PersonaRepository,
-  @service(AutenticacionService)
-  public servicioAutenticacion: AutenticacionService
-    ) {}
+    public personaRepository: PersonaRepository,
+    @service(AutenticacionService)
+    public servicioAutenticacion: AutenticacionService
+  ) { }
 
   @post('/personas')
   @response(200, {
@@ -54,17 +48,18 @@ export class PersonaController {
     let clave = this.servicioAutenticacion.GenerarClave();
     let clavecifrada = this.servicioAutenticacion.CifrarClave(clave);
     persona.clave = clavecifrada;
-    let p =  await this.personaRepository.create(persona);
- 
- //Notificar  al usuario
-let destino = persona.correo;
-let asunto = "Registro en la plataforma"
-let contenido = `Hola ${persona.nombres}su nombre de usuario es ${persona.correo} y su contraseña es ${clave}`;
-fetch(`http://127.0.0.1:5000/envio-correo?correo_destino=${destino}&asunto=${asunto}&contenido=${contenido}`)
-.then((data: any) => {
-  console.log(data);
-})
-return p;
+    let p = await this.personaRepository.create(persona);
+
+    //Notificar  al usuario
+    let destino = persona.email;
+    let asunto = "Registro en la plataforma"
+    let contenido = `Hola ${persona.nombre}su nombre de usuario es ${persona.email} y su contraseña es ${clave}`;
+    fetch(`http://127.0.0.1:5000/envio-correo?correo_destino=${destino}&asunto=${asunto}&contenido=${contenido}`)
+      .then((data: any) => {
+        console.log(data);
+      })
+    return p;
+  }
 
   @get('/personas/count')
   @response(200, {
