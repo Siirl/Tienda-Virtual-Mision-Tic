@@ -1,9 +1,10 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
   Filter,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
   del,
@@ -13,14 +14,14 @@ import {
   param,
   patch,
   post,
-  requestBody,
+  requestBody
 } from '@loopback/rest';
 import {
-  Persona,
-  Pedido,
+  Pedido, Persona
 } from '../models';
 import {PersonaRepository} from '../repositories';
 
+@authenticate("admin")
 export class PersonaPedidoController {
   constructor(
     @repository(PersonaRepository) protected personaRepository: PersonaRepository,

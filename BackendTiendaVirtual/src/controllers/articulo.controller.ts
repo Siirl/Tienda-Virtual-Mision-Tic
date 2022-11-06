@@ -5,29 +5,23 @@ import {
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
-  put,
-  del,
-  requestBody,
-  response,
+  del, get,
+  getModelSchemaRef, param, patch, post, put, requestBody,
+  response
 } from '@loopback/rest';
 import {Articulo} from '../models';
 import {ArticuloRepository} from '../repositories';
 
+@authenticate("admin")
 export class ArticuloController {
   constructor(
     @repository(ArticuloRepository)
-    public articuloRepository : ArticuloRepository,
-  ) {}
+    public articuloRepository: ArticuloRepository,
+  ) { }
 
-  @authenticate("admin")
   @post('/articulos')
   @response(200, {
     description: 'Articulo model instance',
@@ -49,6 +43,7 @@ export class ArticuloController {
     return this.articuloRepository.create(articulo);
   }
 
+  @authenticate.skip()
   @get('/articulos/count')
   @response(200, {
     description: 'Articulo model count',
@@ -60,6 +55,7 @@ export class ArticuloController {
     return this.articuloRepository.count(where);
   }
 
+  @authenticate.skip()
   @get('/articulos')
   @response(200, {
     description: 'Array of Articulo model instances',
@@ -97,6 +93,7 @@ export class ArticuloController {
     return this.articuloRepository.updateAll(articulo, where);
   }
 
+  @authenticate.skip()
   @get('/articulos/{id}')
   @response(200, {
     description: 'Articulo model instance',

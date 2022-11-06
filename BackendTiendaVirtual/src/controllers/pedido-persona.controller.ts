@@ -1,17 +1,18 @@
+import {authenticate} from '@loopback/authentication';
 import {
-  repository,
+  repository
 } from '@loopback/repository';
 import {
-  param,
   get,
-  getModelSchemaRef,
+  getModelSchemaRef, param
 } from '@loopback/rest';
 import {
   Pedido,
-  Persona,
+  Persona
 } from '../models';
 import {PedidoRepository} from '../repositories';
 
+@authenticate("admin")
 export class PedidoPersonaController {
   constructor(
     @repository(PedidoRepository)
