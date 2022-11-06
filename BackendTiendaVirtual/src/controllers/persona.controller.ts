@@ -166,6 +166,12 @@ export class PersonaController {
       .then((data: any) => {
         console.log(data);
       })
+    let mensaje = 'Registro exitoso en la plataforma';
+    let telefono = persona.telefono;
+    fetch(`${Llaves.urlServicioNotificaciones}/sms?mensaje=${mensaje}&telefono=${telefono}`)
+      .then((data: any) => {
+        console.log(data);
+      })
     return p;
   }
 
