@@ -8,15 +8,22 @@ import {
   Where
 } from '@loopback/repository';
 import {
-  del, get,
-  getModelSchemaRef, param, patch, post, put, requestBody,
-  response
+  post,
+  param,
+  get,
+  getModelSchemaRef,
+  patch,
+  put,
+  del,
+  requestBody,
+  response,
+  HttpErrors,
 } from '@loopback/rest';
-import {Persona} from '../models';
+import { Llaves } from '../config/llaves';
+import {Credenciales, Persona} from '../models';
 import {PersonaRepository} from '../repositories';
 import {AutenticacionService} from '../services';
 const fetch = require('node-fetch');
-
 
 export class PersonaController {
   constructor(
@@ -25,6 +32,32 @@ export class PersonaController {
     @service(AutenticacionService)
     public servicioAutenticacion: AutenticacionService
   ) { }
+
+  @post("/identificarPersona", {
+    responses:{
+      '200':{
+        description: "Idetificación de usuarios"
+      }
+    }
+  })
+  async identificarPersona(
+    @requestBody() credenciales: Credenciales
+  ){
+   let p = await this.servicioAutenticacion.IdentificarPersona(credenciales.usuario, credenciales.clave);
+   if(p){
+     let token = this.servicioAutenticacion.GenerartokenJWT(p);
+     return{
+      datos: {
+        nombre: p.nombre,
+        correo: p.email,
+        id: p.id
+      },
+      tk: token
+     }
+   }else{
+     throw new HttpErrors[401]("Datos invlidos");
+   }
+  }
 
   @post('/personas')
   @response(200, {
@@ -54,7 +87,7 @@ export class PersonaController {
     let destino = persona.email;
     let asunto = "Registro en la plataforma"
     let contenido = `Hola ${persona.nombre}su nombre de usuario es ${persona.email} y su contraseña es ${clave}`;
-    fetch(`http://127.0.0.1:5000/envio-correo?correo_destino=${destino}&asunto=${asunto}&contenido=${contenido}`)
+    fetch(`${Llaves.urlServicioNotificaciones}/envio-correo?correo_destino=${destino}&asunto=${asunto}&contenido=${contenido}`)
       .then((data: any) => {
         console.log(data);
       })
