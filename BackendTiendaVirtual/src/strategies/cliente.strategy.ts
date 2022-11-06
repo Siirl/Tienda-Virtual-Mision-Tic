@@ -28,7 +28,6 @@ export class EstrategiaCliente implements AuthenticationStrategy {
         }
       } else {
         throw new HttpErrors[401]("El token incluido no es valido.")
-
       }
     } else {
       throw new HttpErrors[401]("No se ha incluido un token en la solicitud.")
